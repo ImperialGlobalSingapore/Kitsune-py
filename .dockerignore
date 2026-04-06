@@ -1,0 +1,8 @@
+build/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.git/
+*.pdf
+mirai.zip
