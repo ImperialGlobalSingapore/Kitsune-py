@@ -338,7 +338,7 @@ cdef class incStatDB:
     cdef dict HT
 
     # default_lambda: use this as the lambda for all streams. If not specified, then you must supply a Lambda with every query.
-    def __init__(self,double limit=np.Inf,double default_lambda=np.nan):
+    def __init__(self,double limit=np.inf,double default_lambda=np.nan):
         self.HT = dict()
         self.limit = limit
         self.df_lambda = default_lambda
@@ -559,8 +559,8 @@ class incHist:
     def __init__(self,nbins,Lambda=0,ubIsAnom=True,lbIsAnom=True,lbound=-10,ubound=10,scaleGrace=None):
         self.scaleGrace = scaleGrace #the numbe rof instances to observe until a range it determeined
         if scaleGrace is not None:
-            self.lbound = np.Inf
-            self.ubound = -np.Inf
+            self.lbound = np.inf
+            self.ubound = -np.inf
             self.binSize = None
             self.isScaling = True
         else:
@@ -583,21 +583,21 @@ class incHist:
         indx = int(np.floor((val - self.lbound)/self.binSize))
         if win == 0:
             if indx < 0:
-                return -np.Inf
+                return -np.inf
             if indx > (self.nbins - 1):
-                return np.Inf
+                return np.inf
             return indx
         else: #windowed Histogram
             if indx - win < 0: #does the left of the window stick out of bounds?
                 if indx + win >= 0: #if yes, then is there some overlap with inbounds?
                     return range(0,indx+win+1) #return the inbounds range
                 else: #then the entire window is our of bounds to the left
-                    return -np.Inf
+                    return -np.inf
             if indx + win > self.nbins - 1: #does the right of the window stick out of bounds?
                 if indx - win < self.nbins: #if yes, then is there some overlap with inbounds?
                     return range(indx - win,self.nbins) #return the inbounds range
                 else: #then the entire window is our of bounds to the right
-                    return np.Inf
+                    return np.inf
             return range(indx-win,indx+win+1)
 
 
@@ -660,15 +660,15 @@ class incHist:
             if np.isscalar(bin):
                 if np.isinf(bin):
                     if self.ubIsAnom and bin > 0:
-                        return np.Inf #it's an anomaly because it passes the upper bound
+                        return np.inf #it's an anomaly because it passes the upper bound
                     elif self.lbIsAnom and bin < 0:
-                        return np.Inf  # it's an anomaly because it passes the lower bound
+                        return np.inf  # it's an anomaly because it passes the lower bound
                     else:
                         return 0.0 #it fell outside a bound which is consedered not anomalous
             self.processDecay(bin,timestamp) #if timestamp = -1, no decay will be applied
             w = np.mean(self.W[bin])
             if w == 0:
-                return np.Inf  # no stat history, anomaly!
+                return np.inf  # no stat history, anomaly!
             else:
                 return np.log(self.W[self.tallestBin] / (w))  # log(  1/(  p/p_max  )    )
 

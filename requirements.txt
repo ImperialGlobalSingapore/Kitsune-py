@@ -1,6 +1,6 @@
-numpy
+numpy>=1.24,<2
 scipy
-scapy
+scapy>=2.5.0
 matplotlib
 Cython
 websockets
